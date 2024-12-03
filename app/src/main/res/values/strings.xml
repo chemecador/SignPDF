@@ -3,4 +3,5 @@
 
     <!-- Fragments -->
     <string name="select_file">Seleccionar archivo...</string>
+    <string name="file_selected">Archivo seleccionado</string>
 </resources>
