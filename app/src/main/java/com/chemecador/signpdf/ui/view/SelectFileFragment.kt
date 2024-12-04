@@ -8,7 +8,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.chemecador.signpdf.R
 import com.chemecador.signpdf.databinding.FragmentSelectFileBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SelectFileFragment : Fragment() {
 
     private var _binding: FragmentSelectFileBinding? = null
