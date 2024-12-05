@@ -9,5 +9,15 @@
         android:id="@+id/selectFileFragment"
         android:name="com.chemecador.signpdf.ui.view.SelectFileFragment"
         android:label="Select File"
-        tools:layout="@layout/fragment_select_file" />
+        tools:layout="@layout/fragment_select_file">
+        <action
+            android:id="@+id/action_selectFileFragment_to_showPDFFragment"
+            app:destination="@id/showPDFFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/showPDFFragment"
+        android:name="com.chemecador.signpdf.ui.view.ShowPDFFragment"
+        android:label="Show PDF" />
+
 </navigation>

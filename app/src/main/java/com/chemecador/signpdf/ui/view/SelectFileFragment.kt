@@ -9,8 +9,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.chemecador.signpdf.R
 import com.chemecador.signpdf.databinding.FragmentSelectFileBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
 @AndroidEntryPoint
 class SelectFileFragment : Fragment() {
@@ -41,23 +44,26 @@ class SelectFileFragment : Fragment() {
     }
 
     private fun handleSelectedFile(uri: Uri) {
-        val fileName = getFileName(uri)
-        Toast.makeText(requireContext(), "Selected file: $fileName", Toast.LENGTH_SHORT).show()
+        val file = getFileFromUri(uri)
+        navigateToShowPDFFragment(file.absolutePath)
+    }
+    private fun getFileFromUri(uri: Uri): File {
+        val inputStream = requireContext().contentResolver.openInputStream(uri)
+        val file = File(requireContext().cacheDir, "selected.pdf")
+        file.outputStream().use { outputStream ->
+            inputStream?.copyTo(outputStream)
+        }
+        return file
     }
 
-    private fun getFileName(uri: Uri): String? {
-        var fileName: String? = null
-        val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val columnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                if (columnIndex != -1) {
-                    fileName = it.getString(columnIndex)
-                }
-            }
+    private fun navigateToShowPDFFragment(filePath: String) {
+        val bundle = Bundle().apply {
+            putString(ShowPDFFragment.ARG_FILE_PATH, filePath)
         }
-        return fileName
+
+        findNavController().navigate(R.id.action_selectFileFragment_to_showPDFFragment, bundle)
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
