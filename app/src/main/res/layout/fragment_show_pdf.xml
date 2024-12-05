@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="@dimen/margin_medium">
 
     <ImageView
-        android:id="@+id/pdfImageView"
+        android:id="@+id/iv_pdf"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
-        android:contentDescription="Vista previa del PDF" />
+        android:contentDescription="@string/view_pdf" />
 
 </LinearLayout>

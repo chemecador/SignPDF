@@ -2,6 +2,7 @@
     <string name="app_name">SignPDF</string>
 
     <!-- Fragments -->
+    <string name="view_pdf">Visualizar PDF</string>
     <string name="select_file">Seleccionar archivo...</string>
     <string name="file_selected">Archivo seleccionado</string>
 </resources>

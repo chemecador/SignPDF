@@ -1,4 +1,5 @@
 package com.chemecador.signpdf.ui.view
+
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
@@ -6,7 +7,6 @@ import android.os.ParcelFileDescriptor
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.chemecador.signpdf.databinding.FragmentShowPdfBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +37,8 @@ class ShowPDFFragment : Fragment() {
     private fun showPdf(filePath: String) {
         val file = File(filePath)
         try {
-            val fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+            val fileDescriptor =
+                ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
             val pdfRenderer = PdfRenderer(fileDescriptor)
 
             if (pdfRenderer.pageCount > 0) {
@@ -45,7 +46,7 @@ class ShowPDFFragment : Fragment() {
                 val bitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
                 page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
                 page.close()
-                binding.pdfImageView.setImageBitmap(bitmap)
+                binding.ivPdf.setImageBitmap(bitmap)
             }
             pdfRenderer.close()
         } catch (e: IOException) {
@@ -58,7 +59,7 @@ class ShowPDFFragment : Fragment() {
         _binding = null
     }
 
-    companion object{
+    companion object {
         const val ARG_FILE_PATH = "file_path"
     }
 }
