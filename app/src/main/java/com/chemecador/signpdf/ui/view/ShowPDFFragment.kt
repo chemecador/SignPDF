@@ -2,7 +2,9 @@ package com.chemecador.signpdf.ui.view
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfRenderer
+import android.net.Uri
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.view.LayoutInflater
@@ -10,11 +12,14 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.chemecador.signpdf.R
 import com.chemecador.signpdf.databinding.FragmentShowPdfBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.io.File
@@ -29,6 +34,10 @@ class ShowPDFFragment : Fragment() {
     private var currentPageIndex: Int = 0
     private var totalPages: Int = 0
     private val pageSignatures = mutableMapOf<Int, Bitmap?>()
+    private val createFileLauncher =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/pdf")) { uri: Uri? ->
+            uri?.let { savePdfToUri(it) }
+        }
 
 
     override fun onCreateView(
@@ -61,18 +70,43 @@ class ShowPDFFragment : Fragment() {
         binding.btnNextPage.setOnClickListener { navigateToPage(true) }
         binding.btnCancel.setOnClickListener { binding.drawingView.clearDrawing() }
         binding.btnFinish.setOnClickListener {
+            if (!binding.drawingView.isEmpty()) {
+                val bitmap = Bitmap.createBitmap(
+                    binding.drawingView.width,
+                    binding.drawingView.height,
+                    Bitmap.Config.ARGB_8888
+                )
+                val canvas = Canvas(bitmap)
+                binding.drawingView.draw(canvas)
+                pageSignatures[currentPageIndex] = bitmap
+                binding.drawingView.clearDrawing()
+            }
+
+            val originalFilePath = requireArguments().getString(ARG_FILE_PATH)!!
+            val originalFileName = File(originalFilePath).nameWithoutExtension
+            val defaultFileName = "${originalFileName}_signed.pdf"
+
+            showSaveDialog(defaultFileName) { newFileName ->
+                createFileLauncher.launch(newFileName)
+            }
         }
+
     }
 
     private fun navigateToPage(goToNextPage: Boolean) {
-
         if (!binding.drawingView.isEmpty()) {
-            val bitmap = Bitmap.createBitmap(binding.drawingView.width, binding.drawingView.height, Bitmap.Config.ARGB_8888)
+            val bitmap = Bitmap.createBitmap(
+                binding.ivPdf.width,
+                binding.ivPdf.height,
+                Bitmap.Config.ARGB_8888
+            )
             val canvas = Canvas(bitmap)
-            binding.drawingView.draw(canvas)
+            binding.drawingView.exportBitmap().let { canvas.drawBitmap(it, 0f, 0f, null) }
             pageSignatures[currentPageIndex] = bitmap
             binding.drawingView.clearDrawing()
         }
+
+
         if (goToNextPage && currentPageIndex < totalPages - 1) {
             currentPageIndex++
         } else if (!goToNextPage && currentPageIndex > 0) {
@@ -80,8 +114,10 @@ class ShowPDFFragment : Fragment() {
         }
         showPage(currentPageIndex)
         binding.btnPrevPage.visibility = if (currentPageIndex == 0) INVISIBLE else VISIBLE
-        binding.btnNextPage.visibility = if (currentPageIndex == totalPages - 1) INVISIBLE else VISIBLE
+        binding.btnNextPage.visibility =
+            if (currentPageIndex == totalPages - 1) INVISIBLE else VISIBLE
     }
+
 
     private fun openPdf(filePath: String) {
         val file = File(filePath)
@@ -102,6 +138,7 @@ class ShowPDFFragment : Fragment() {
             findNavController().popBackStack()
         }
     }
+
     private fun showPage(pageIndex: Int) {
         val page = pdfRenderer.openPage(pageIndex)
         val bitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
@@ -114,6 +151,87 @@ class ShowPDFFragment : Fragment() {
             binding.drawingView.setBackgroundBitmap(signature)
         }
         binding.drawingView.clearDrawing()
+    }
+
+    private fun showSaveDialog(defaultFileName: String, onSave: (String) -> Unit) {
+        val editText = EditText(requireContext()).apply {
+            setText(defaultFileName)
+            setSelectAllOnFocus(true)
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.save_pdf))
+            .setView(editText)
+            .setPositiveButton(getString(R.string.save)) { _, _ ->
+                val fileName = editText.text.toString().trim()
+                if (fileName.isNotEmpty()) {
+                    onSave(fileName)
+                } else {
+                    editText.error = getString(R.string.error_empty_name)
+                }
+            }
+            .setNegativeButton(getString(R.string.action_cancel), null)
+            .show()
+    }
+
+    private fun savePdfToUri(uri: Uri) {
+        try {
+            val originalFilePath = arguments?.getString(ARG_FILE_PATH) ?: return
+            val fileDescriptor = ParcelFileDescriptor.open(
+                File(originalFilePath),
+                ParcelFileDescriptor.MODE_READ_ONLY
+            )
+            val pdfRenderer = PdfRenderer(fileDescriptor)
+
+            requireContext().contentResolver.openOutputStream(uri)?.use { outputStream ->
+                val document = PdfDocument()
+
+                for (i in 0 until pdfRenderer.pageCount) {
+                    val page = pdfRenderer.openPage(i)
+                    val pageBitmap =
+                        Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
+                    val canvas = Canvas(pageBitmap)
+                    page.render(pageBitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                    page.close()
+
+                    pageSignatures[i]?.let { signature ->
+                        val scaledSignature = Bitmap.createScaledBitmap(
+                            signature,
+                            page.width,
+                            page.height,
+                            false
+                        )
+                        canvas.drawBitmap(scaledSignature, 0f, 0f, null)
+                    }
+
+                    val pageInfo =
+                        PdfDocument.PageInfo.Builder(pageBitmap.width, pageBitmap.height, i + 1)
+                            .create()
+                    val pdfPage = document.startPage(pageInfo)
+                    pdfPage.canvas.drawBitmap(pageBitmap, 0f, 0f, null)
+                    document.finishPage(pdfPage)
+
+                    pageBitmap.recycle()
+                }
+
+                document.writeTo(outputStream)
+                document.close()
+                pdfRenderer.close()
+
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.file_saved, uri.toString()),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.error_saving_file),
+                Toast.LENGTH_SHORT
+            ).show()
+            e.printStackTrace()
+        }
     }
 
     override fun onDestroyView() {

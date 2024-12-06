@@ -70,5 +70,13 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     fun isEmpty(): Boolean {
         return !hasDrawn
     }
+
+    fun exportBitmap(): Bitmap {
+        val resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(resultBitmap)
+        backgroundBitmap?.let { canvas.drawBitmap(it, 0f, 0f, null) }
+        canvas.drawPath(path, paint)
+        return resultBitmap
+    }
 }
 
