@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -13,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.chemecador.signpdf.R
 import com.chemecador.signpdf.databinding.FragmentShowPdfBinding
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import java.io.File
 import java.io.IOException
 
@@ -21,7 +24,7 @@ class ShowPDFFragment : Fragment() {
 
     private var _binding: FragmentShowPdfBinding? = null
     private val binding get() = _binding!!
-    private var pdfRenderer: PdfRenderer? = null
+    private lateinit var pdfRenderer: PdfRenderer
     private var currentPageIndex: Int = 0
     private var totalPages: Int = 0
 
@@ -50,56 +53,52 @@ class ShowPDFFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.btnPrevPage.setOnClickListener {
-            goToPreviousPage()
-        }
-        binding.btnNextPage.setOnClickListener {
-            goToNextPage()
-        }
+        binding.btnPrevPage.visibility = INVISIBLE
+        binding.btnPrevPage.setOnClickListener { navigateToPage(false) }
+        binding.btnNextPage.setOnClickListener { navigateToPage(true) }
+        binding.btnCancel.setOnClickListener { binding.drawingView.clearDrawing() }
+    }
 
-        binding.btnCancel.setOnClickListener {
-            binding.drawingView.clearDrawing()
+    private fun navigateToPage(goToNextPage: Boolean) {
+        if (goToNextPage && currentPageIndex < totalPages - 1) {
+            currentPageIndex++
+        } else if (!goToNextPage && currentPageIndex > 0) {
+            currentPageIndex--
         }
+        showPage(currentPageIndex)
+        binding.btnPrevPage.visibility = if (currentPageIndex == 0) INVISIBLE else VISIBLE
+        binding.btnNextPage.visibility = if (currentPageIndex == totalPages - 1) INVISIBLE else VISIBLE
     }
 
     private fun openPdf(filePath: String) {
         val file = File(filePath)
         try {
-            val fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+            val fileDescriptor =
+                ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
             pdfRenderer = PdfRenderer(fileDescriptor)
 
-            totalPages = pdfRenderer?.pageCount ?: 0
+            totalPages = pdfRenderer.pageCount
             currentPageIndex = 0
 
             if (totalPages > 0) {
                 showPage(currentPageIndex)
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            Timber.e(e, "Error al abrir el archivo PDF")
+            Toast.makeText(requireContext(), R.string.error_file, Toast.LENGTH_SHORT).show()
+            findNavController().popBackStack()
         }
     }
+
     private fun showPage(pageIndex: Int) {
-        val page = pdfRenderer?.openPage(pageIndex)
-        val bitmap = Bitmap.createBitmap(page?.width ?: 0, page?.height ?: 0, Bitmap.Config.ARGB_8888)
-        page?.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-        page?.close()
+        val page = pdfRenderer.openPage(pageIndex)
+        val bitmap =
+            Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
+        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+        page.close()
 
         binding.ivPdf.setImageBitmap(bitmap)
         binding.tvPageInfo.text = getString(R.string.page_info, pageIndex + 1, totalPages)
-    }
-
-    private fun goToPreviousPage() {
-        if (currentPageIndex > 0) {
-            currentPageIndex--
-            showPage(currentPageIndex)
-        }
-    }
-
-    private fun goToNextPage() {
-        if (currentPageIndex < totalPages - 1) {
-            currentPageIndex++
-            showPage(currentPageIndex)
-        }
     }
 
     override fun onDestroyView() {

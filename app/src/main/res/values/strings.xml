@@ -9,6 +9,7 @@
     <string name="select_file">Seleccionar archivo...</string>
     <string name="file_selected">Archivo seleccionado</string>
     <string name="file_not_found">Archivo no encontrado</string>
+    <string name="error_file">Archivo no encontrado</string>
     <string name="title_sign">Firma con el dedo sobre la pantalla</string>
     <string name="view_pdf">Visualizar PDF</string>
 
