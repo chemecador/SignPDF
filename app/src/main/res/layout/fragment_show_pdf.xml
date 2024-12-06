@@ -1,20 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/margin_medium">
 
-
-    <TextView
-        android:id="@+id/tv_title"
+    <LinearLayout
+        android:id="@+id/linear_page"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/title_sign"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_prev_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:contentDescription="@string/prev_page"
+            android:src="@drawable/ic_back"
+            app:tint="@color/black" />
+
+        <TextView
+            android:id="@+id/tv_page_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_large"
+            tools:text="Page 1/1" />
+
+        <ImageButton
+            android:id="@+id/btn_next_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:contentDescription="@string/next_page"
+            android:src="@drawable/ic_forward"
+            app:tint="@color/black" />
+    </LinearLayout>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_gravity="center"
@@ -25,7 +56,7 @@
         app:layout_constraintBottom_toTopOf="@id/btn_cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title">
+        app:layout_constraintTop_toBottomOf="@+id/linear_page">
 
         <ImageView
             android:id="@+id/iv_pdf"
@@ -38,12 +69,27 @@
             android:id="@+id/drawingView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+
+        <TextView
+            android:id="@+id/tv_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="@dimen/margin_medium"
+            android:text="@string/title_sign"
+            android:textStyle="italic"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_cancel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_xsmall"
         android:drawableStart="@drawable/ic_delete"
         android:text="@string/action_cancel"
         app:icon="@drawable/ic_delete"
@@ -55,11 +101,13 @@
         android:id="@+id/btn_finish"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_xsmall"
         android:drawableStart="@drawable/ic_delete"
         android:text="@string/action_sign"
         app:icon="@drawable/ic_edit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/btn_cancel" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,9 @@ class ShowPDFFragment : Fragment() {
 
     private var _binding: FragmentShowPdfBinding? = null
     private val binding get() = _binding!!
+    private var pdfRenderer: PdfRenderer? = null
+    private var currentPageIndex: Int = 0
+    private var totalPages: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,37 +35,70 @@ class ShowPDFFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initUI()
+        setupListeners()
+    }
 
+    private fun initUI() {
         val filePath = arguments?.getString(ARG_FILE_PATH)
         if (filePath == null) {
             Toast.makeText(requireContext(), R.string.file_not_found, Toast.LENGTH_SHORT).show()
             findNavController().popBackStack()
             return
         }
-        showPdf(filePath)
+        openPdf(filePath)
+    }
+
+    private fun setupListeners() {
+        binding.btnPrevPage.setOnClickListener {
+            goToPreviousPage()
+        }
+        binding.btnNextPage.setOnClickListener {
+            goToNextPage()
+        }
 
         binding.btnCancel.setOnClickListener {
             binding.drawingView.clearDrawing()
         }
     }
 
-    private fun showPdf(filePath: String) {
+    private fun openPdf(filePath: String) {
         val file = File(filePath)
         try {
-            val fileDescriptor =
-                ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
-            val pdfRenderer = PdfRenderer(fileDescriptor)
+            val fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+            pdfRenderer = PdfRenderer(fileDescriptor)
 
-            if (pdfRenderer.pageCount > 0) {
-                val page = pdfRenderer.openPage(0)
-                val bitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
-                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                page.close()
-                binding.ivPdf.setImageBitmap(bitmap)
+            totalPages = pdfRenderer?.pageCount ?: 0
+            currentPageIndex = 0
+
+            if (totalPages > 0) {
+                showPage(currentPageIndex)
             }
-            pdfRenderer.close()
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+    private fun showPage(pageIndex: Int) {
+        val page = pdfRenderer?.openPage(pageIndex)
+        val bitmap = Bitmap.createBitmap(page?.width ?: 0, page?.height ?: 0, Bitmap.Config.ARGB_8888)
+        page?.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+        page?.close()
+
+        binding.ivPdf.setImageBitmap(bitmap)
+        binding.tvPageInfo.text = getString(R.string.page_info, pageIndex + 1, totalPages)
+    }
+
+    private fun goToPreviousPage() {
+        if (currentPageIndex > 0) {
+            currentPageIndex--
+            showPage(currentPageIndex)
+        }
+    }
+
+    private fun goToNextPage() {
+        if (currentPageIndex < totalPages - 1) {
+            currentPageIndex++
+            showPage(currentPageIndex)
         }
     }
 

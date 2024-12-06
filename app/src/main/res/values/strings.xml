@@ -11,4 +11,9 @@
     <string name="file_not_found">Archivo no encontrado</string>
     <string name="title_sign">Firma con el dedo sobre la pantalla</string>
     <string name="view_pdf">Visualizar PDF</string>
+
+    <!-- Pages -->
+    <string name="page_info">Página: %1$d / %2$d</string>
+    <string name="prev_page">Página anterior</string>
+    <string name="next_page">Siguiente página</string>
 </resources>
