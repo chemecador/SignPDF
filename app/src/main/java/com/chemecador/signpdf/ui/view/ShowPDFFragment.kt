@@ -1,6 +1,7 @@
 package com.chemecador.signpdf.ui.view
 
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
@@ -27,6 +28,8 @@ class ShowPDFFragment : Fragment() {
     private lateinit var pdfRenderer: PdfRenderer
     private var currentPageIndex: Int = 0
     private var totalPages: Int = 0
+    private val pageSignatures = mutableMapOf<Int, Bitmap?>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,9 +60,19 @@ class ShowPDFFragment : Fragment() {
         binding.btnPrevPage.setOnClickListener { navigateToPage(false) }
         binding.btnNextPage.setOnClickListener { navigateToPage(true) }
         binding.btnCancel.setOnClickListener { binding.drawingView.clearDrawing() }
+        binding.btnFinish.setOnClickListener {
+        }
     }
 
     private fun navigateToPage(goToNextPage: Boolean) {
+
+        if (!binding.drawingView.isEmpty()) {
+            val bitmap = Bitmap.createBitmap(binding.drawingView.width, binding.drawingView.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            binding.drawingView.draw(canvas)
+            pageSignatures[currentPageIndex] = bitmap
+            binding.drawingView.clearDrawing()
+        }
         if (goToNextPage && currentPageIndex < totalPages - 1) {
             currentPageIndex++
         } else if (!goToNextPage && currentPageIndex > 0) {
@@ -89,16 +102,18 @@ class ShowPDFFragment : Fragment() {
             findNavController().popBackStack()
         }
     }
-
     private fun showPage(pageIndex: Int) {
         val page = pdfRenderer.openPage(pageIndex)
-        val bitmap =
-            Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
         page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
         page.close()
-
         binding.ivPdf.setImageBitmap(bitmap)
         binding.tvPageInfo.text = getString(R.string.page_info, pageIndex + 1, totalPages)
+        binding.drawingView.setBackgroundBitmap(null)
+        pageSignatures[pageIndex]?.let { signature ->
+            binding.drawingView.setBackgroundBitmap(signature)
+        }
+        binding.drawingView.clearDrawing()
     }
 
     override fun onDestroyView() {
