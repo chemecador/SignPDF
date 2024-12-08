@@ -8,6 +8,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
@@ -15,6 +18,8 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.chemecador.signpdf.R
@@ -55,6 +60,7 @@ class ShowPDFFragment : Fragment() {
     }
 
     private fun initUI() {
+        setupMenu()
         val filePath = arguments?.getString(ARG_FILE_PATH)
         if (filePath == null) {
             Toast.makeText(requireContext(), R.string.file_not_found, Toast.LENGTH_SHORT).show()
@@ -62,6 +68,36 @@ class ShowPDFFragment : Fragment() {
             return
         }
         openPdf(filePath)
+    }
+
+    private fun setupMenu() {
+        val activity = requireActivity() as AppCompatActivity
+        activity.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_main, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        findNavController().navigateUp()
+                        true
+                    }
+
+                    R.id.action_settings -> {
+                        findNavController().navigate(R.id.action_showPDFFragment_to_settingsFragment)
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner)
+
+        activity.supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+        }
+        activity.title = ""
     }
 
     private fun setupListeners() {
@@ -117,7 +153,6 @@ class ShowPDFFragment : Fragment() {
         binding.btnNextPage.visibility =
             if (currentPageIndex == totalPages - 1) INVISIBLE else VISIBLE
     }
-
 
     private fun openPdf(filePath: String) {
         val file = File(filePath)

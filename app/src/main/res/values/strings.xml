@@ -1,17 +1,23 @@
 <resources>
     <string name="app_name">SignPDF</string>
 
+
+    <!-- Activities -->
+    <string name="settings">Configuración</string>
+
     <!-- Actions -->
     <string name="action_cancel">Cancelar</string>
     <string name="action_sign">Firmar</string>
 
-    <!-- Fragments -->
+    <!-- Hints -->
+    <string name="title_sign">Firma con el dedo sobre la pantalla</string>
+    <string name="view_pdf">Visualizar PDF</string>
+
+    <!-- File -->
     <string name="select_file">Seleccionar archivo...</string>
     <string name="file_selected">Archivo seleccionado</string>
     <string name="file_not_found">Archivo no encontrado</string>
     <string name="error_file">Archivo no encontrado</string>
-    <string name="title_sign">Firma con el dedo sobre la pantalla</string>
-    <string name="view_pdf">Visualizar PDF</string>
 
     <!-- Pages -->
     <string name="page_info">Página: %1$d / %2$d</string>
@@ -24,4 +30,5 @@
     <string name="save">Guardar</string>
     <string name="file_saved">Archivo guardado en: %1$s</string>
     <string name="error_saving_file">Error al guardar el archivo</string>
+
 </resources>

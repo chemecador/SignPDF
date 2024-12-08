@@ -18,6 +18,16 @@
     <fragment
         android:id="@+id/showPDFFragment"
         android:name="com.chemecador.signpdf.ui.view.ShowPDFFragment"
-        android:label="Show PDF" />
+        tools:layout="@layout/fragment_show_pdf">
+        <action
+            android:id="@+id/action_showPDFFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.chemecador.signpdf.ui.view.settings.SettingsFragment"
+        tools:layout="@layout/fragment_settings" />
+
 
 </navigation>

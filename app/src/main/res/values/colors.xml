@@ -2,4 +2,26 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="colorOnSecondaryContainer">#6C6652</color>
+    <color name="colorTextDark">#353535</color>
+    <color name="colorTextLight">#F9FAE2</color>
+    <color name="colorPrimary">#07B1FF</color>
+    <color name="colorPrimaryDark">#033915</color>
+    <color name="colorOnPrimary">#000000</color>
+    <color name="colorSecondary">#03DAC6</color>
+    <color name="colorSecondaryDark">#016C4B</color>
+    <color name="colorOnSecondary">#000000</color>
+    <color name="colorBackground">#BDF9FB</color>
+    <color name="colorText">@color/colorTextDark</color>
+
+
+    <color name="colorStatusBar">#033915</color>
+
+    <!-- Colors -->
+    <color name="red">#FF5454</color>
+    <color name="orange">#F4B470</color>
+    <color name="green">#B7FBC2</color>
+    <color name="colorLink">#3AE2FF</color>
+    <color name="colorDisabled">#878585</color>
 </resources>
