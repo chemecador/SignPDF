@@ -21,6 +21,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         isAntiAlias = true
         style = Paint.Style.STROKE
     }
+    lateinit var onStartDrawing: (() -> Unit)
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
@@ -30,6 +31,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             MotionEvent.ACTION_DOWN -> {
                 path.moveTo(x, y)
                 performClick()
+                onStartDrawing.invoke()
             }
             MotionEvent.ACTION_MOVE -> {
                 path.lineTo(x, y)

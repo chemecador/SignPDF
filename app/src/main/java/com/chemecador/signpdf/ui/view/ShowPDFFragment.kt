@@ -20,10 +20,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.chemecador.signpdf.R
 import com.chemecador.signpdf.databinding.FragmentShowPdfBinding
+import com.chemecador.signpdf.utils.ViewUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -124,6 +126,13 @@ class ShowPDFFragment : Fragment() {
 
             showSaveDialog(defaultFileName) { newFileName ->
                 createFileLauncher.launch(newFileName)
+            }
+        }
+        binding.drawingView.onStartDrawing = {
+            if (!binding.btnFinish.isVisible) {
+                ViewUtils.show(binding.btnFinish)
+                ViewUtils.show(binding.btnCancel)
+                ViewUtils.hide(binding.tvHint)
             }
         }
 

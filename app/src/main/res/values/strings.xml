@@ -7,6 +7,7 @@
 
     <!-- Actions -->
     <string name="action_cancel">Cancelar</string>
+    <string name="action_delete">Borrar firma</string>
     <string name="action_sign">Firmar</string>
 
     <!-- Hints -->
