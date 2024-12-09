@@ -22,12 +22,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.chemecador.signpdf.R
 import com.chemecador.signpdf.databinding.FragmentShowPdfBinding
+import com.chemecador.signpdf.ui.viewmodel.ViewModel
 import com.chemecador.signpdf.utils.ViewUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
@@ -37,6 +42,8 @@ class ShowPDFFragment : Fragment() {
 
     private var _binding: FragmentShowPdfBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: ViewModel by viewModels()
+
     private lateinit var pdfRenderer: PdfRenderer
     private var currentPageIndex: Int = 0
     private var totalPages: Int = 0
@@ -108,6 +115,50 @@ class ShowPDFFragment : Fragment() {
         binding.btnNextPage.setOnClickListener { navigateToPage(true) }
         binding.btnCancel.setOnClickListener { binding.drawingView.clearDrawing() }
         binding.btnFinish.setOnClickListener {
+            lifecycleScope.launch {
+                val signAllPages = viewModel.isSignAllPagesEnabled.first()
+
+                if (!binding.drawingView.isEmpty()) {
+                    val bitmap = Bitmap.createBitmap(
+                        binding.drawingView.width,
+                        binding.drawingView.height,
+                        Bitmap.Config.ARGB_8888
+                    )
+                    val canvas = Canvas(bitmap)
+                    binding.drawingView.draw(canvas)
+
+                    if (signAllPages) {
+                        for (i in 0 until totalPages) {
+                            pageSignatures[i] = bitmap
+                        }
+                    } else {
+                        pageSignatures[currentPageIndex] = bitmap
+                    }
+
+                    binding.drawingView.clearDrawing()
+                }
+                val originalFilePath = requireArguments().getString(ARG_FILE_PATH)!!
+                val originalFileName = File(originalFilePath).nameWithoutExtension
+                val defaultFileName = "${originalFileName}_signed.pdf"
+
+                showSaveDialog(defaultFileName) { newFileName ->
+                    createFileLauncher.launch(newFileName)
+                }
+            }
+        }
+
+        binding.drawingView.onStartDrawing = {
+            if (!binding.btnFinish.isVisible) {
+                ViewUtils.show(binding.btnFinish)
+                ViewUtils.show(binding.btnCancel)
+                ViewUtils.hide(binding.tvHint)
+            }
+        }
+    }
+
+    private fun navigateToPage(goToNextPage: Boolean) {
+        lifecycleScope.launch {
+            val signAllPages = viewModel.isSignAllPagesEnabled.first()
             if (!binding.drawingView.isEmpty()) {
                 val bitmap = Bitmap.createBitmap(
                     binding.drawingView.width,
@@ -116,51 +167,29 @@ class ShowPDFFragment : Fragment() {
                 )
                 val canvas = Canvas(bitmap)
                 binding.drawingView.draw(canvas)
-                pageSignatures[currentPageIndex] = bitmap
+
+                if (signAllPages) {
+                    for (i in 0 until totalPages) {
+                        pageSignatures[i] = bitmap
+                    }
+                } else {
+                    pageSignatures[currentPageIndex] = bitmap
+                }
+
                 binding.drawingView.clearDrawing()
             }
 
-            val originalFilePath = requireArguments().getString(ARG_FILE_PATH)!!
-            val originalFileName = File(originalFilePath).nameWithoutExtension
-            val defaultFileName = "${originalFileName}_signed.pdf"
-
-            showSaveDialog(defaultFileName) { newFileName ->
-                createFileLauncher.launch(newFileName)
+            if (goToNextPage && currentPageIndex < totalPages - 1) {
+                currentPageIndex++
+            } else if (!goToNextPage && currentPageIndex > 0) {
+                currentPageIndex--
             }
-        }
-        binding.drawingView.onStartDrawing = {
-            if (!binding.btnFinish.isVisible) {
-                ViewUtils.show(binding.btnFinish)
-                ViewUtils.show(binding.btnCancel)
-                ViewUtils.hide(binding.tvHint)
-            }
-        }
 
-    }
-
-    private fun navigateToPage(goToNextPage: Boolean) {
-        if (!binding.drawingView.isEmpty()) {
-            val bitmap = Bitmap.createBitmap(
-                binding.ivPdf.width,
-                binding.ivPdf.height,
-                Bitmap.Config.ARGB_8888
-            )
-            val canvas = Canvas(bitmap)
-            binding.drawingView.exportBitmap().let { canvas.drawBitmap(it, 0f, 0f, null) }
-            pageSignatures[currentPageIndex] = bitmap
-            binding.drawingView.clearDrawing()
+            showPage(currentPageIndex)
+            binding.btnPrevPage.visibility = if (currentPageIndex == 0) INVISIBLE else VISIBLE
+            binding.btnNextPage.visibility =
+                if (currentPageIndex == totalPages - 1) INVISIBLE else VISIBLE
         }
-
-
-        if (goToNextPage && currentPageIndex < totalPages - 1) {
-            currentPageIndex++
-        } else if (!goToNextPage && currentPageIndex > 0) {
-            currentPageIndex--
-        }
-        showPage(currentPageIndex)
-        binding.btnPrevPage.visibility = if (currentPageIndex == 0) INVISIBLE else VISIBLE
-        binding.btnNextPage.visibility =
-            if (currentPageIndex == totalPages - 1) INVISIBLE else VISIBLE
     }
 
     private fun openPdf(filePath: String) {
