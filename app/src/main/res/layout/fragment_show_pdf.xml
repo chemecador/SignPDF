@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/view_pdf"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitXY" />
 
         <com.chemecador.signpdf.ui.view.util.DrawingView
             android:id="@+id/drawingView"
