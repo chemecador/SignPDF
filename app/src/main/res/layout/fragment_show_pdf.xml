@@ -50,7 +50,6 @@
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_margin="@dimen/margin_small"
-        app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="@dimen/cardview_default_radius"
         app:cardElevation="@dimen/cardview_default_elevation"
         app:layout_constraintBottom_toTopOf="@id/btn_cancel"
@@ -58,17 +57,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linear_page">
 
-        <ImageView
+        <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/iv_pdf"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/view_pdf"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:contentDescription="@string/view_pdf" />
 
-        <com.chemecador.signpdf.ui.view.util.DrawingView
-            android:id="@+id/drawingView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/iv_pencil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/action_sign"
+            android:src="@drawable/ic_edit"
+            android:visibility="invisible" />
 
     </androidx.cardview.widget.CardView>
 
@@ -82,7 +84,7 @@
         android:padding="@dimen/margin_medium"
         android:text="@string/title_sign"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_cancel"
