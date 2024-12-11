@@ -7,8 +7,12 @@
 
     <!-- Actions -->
     <string name="action_cancel">Cancelar</string>
-    <string name="action_delete">Borrar firma</string>
+    <string name="action_delete">Borrar</string>
     <string name="action_sign">Firmar</string>
+
+    <!-- Modes -->
+    <string name="hand_mode">Moverse por el PDF</string>
+    <string name="pencil_mode">Firma con lápiz</string>
 
     <!-- Hints -->
     <string name="title_sign">Firma con el dedo sobre la pantalla</string>

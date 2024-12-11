@@ -69,6 +69,7 @@ dependencies {
 
     // Logs
     implementation(libs.timber)
+    implementation (libs.baseflow.photoview)
 
 
     // Testing

@@ -17,8 +17,11 @@
 
 
     <color name="colorStatusBar">#033915</color>
+    <color name="selected">#FF6200EE</color>
+    <color name="unselected">#FFB0BEC5</color>
 
     <!-- Colors -->
+    <color name="light">#F0F0F0</color>
     <color name="red">#FF5454</color>
     <color name="orange">#F4B470</color>
     <color name="green">#B7FBC2</color>

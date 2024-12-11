@@ -12,6 +12,12 @@ import android.view.View
 
 class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
+
+    interface OnDrawListener {
+        fun onDrawStateChanged(hasDrawn: Boolean)
+    }
+
+    private var drawListener: OnDrawListener? = null
     private var hasDrawn = false
     private var backgroundBitmap: Bitmap? = null
     private val path = Path()
@@ -21,9 +27,9 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         isAntiAlias = true
         style = Paint.Style.STROKE
     }
-    lateinit var onStartDrawing: (() -> Unit)
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!isEnabled) return false
         val x = event.x
         val y = event.y
 
@@ -31,12 +37,15 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             MotionEvent.ACTION_DOWN -> {
                 path.moveTo(x, y)
                 performClick()
-                onStartDrawing.invoke()
             }
+
             MotionEvent.ACTION_MOVE -> {
                 path.lineTo(x, y)
                 hasDrawn = true
+                drawListener?.onDrawStateChanged(true)
+
             }
+
             MotionEvent.ACTION_UP -> {
                 performClick()
             }
@@ -58,27 +67,23 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         canvas.drawPath(path, paint)
     }
 
-    fun setBackgroundBitmap(bitmap: Bitmap?) {
-        backgroundBitmap = bitmap
-        invalidate()
+    fun setOnDrawListener(listener: OnDrawListener) {
+        drawListener = listener
     }
 
     fun clearDrawing() {
-        path.reset()
+        drawListener?.onDrawStateChanged(false)
         hasDrawn = false
+        path.reset()
         invalidate()
     }
 
-    fun isEmpty(): Boolean {
-        return !hasDrawn
+    fun getBitmap(): Bitmap {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        draw(canvas)
+        return bitmap
     }
 
-    fun exportBitmap(): Bitmap {
-        val resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(resultBitmap)
-        backgroundBitmap?.let { canvas.drawBitmap(it, 0f, 0f, null) }
-        canvas.drawPath(path, paint)
-        return resultBitmap
-    }
 }
 
