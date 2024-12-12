@@ -15,7 +15,7 @@
     <string name="pencil_mode">Firma con lápiz</string>
 
     <!-- Hints -->
-    <string name="title_sign">Firma con el dedo sobre la pantalla</string>
+    <string name="title_sign">Toca con el dedo dónde quieres firmar</string>
     <string name="view_pdf">Visualizar PDF</string>
 
     <!-- File -->
