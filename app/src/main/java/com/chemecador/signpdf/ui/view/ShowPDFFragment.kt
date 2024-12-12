@@ -22,15 +22,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.chemecador.signpdf.R
 import com.chemecador.signpdf.databinding.DialogSignatureBinding
 import com.chemecador.signpdf.databinding.FragmentShowPdfBinding
 import com.chemecador.signpdf.ui.view.util.DrawingView
+import com.chemecador.signpdf.ui.viewmodel.ViewModel
 import com.chemecador.signpdf.utils.ViewUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
@@ -41,6 +44,7 @@ class ShowPDFFragment : Fragment() {
 
     private var _binding: FragmentShowPdfBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: ViewModel by viewModels()
 
     private lateinit var pdfRenderer: PdfRenderer
     private var currentPageIndex: Int = 0
@@ -115,18 +119,30 @@ class ShowPDFFragment : Fragment() {
         binding.btnNextPage.setOnClickListener { navigateToPage(true) }
         binding.btnFinish.setOnClickListener {
             lifecycleScope.launch {
+                val signAllPages = viewModel.isSignAllPagesEnabled.first()
+
                 showSignatureDialog { signatureBitmap ->
-                    insertSignatureAtCursor(signatureBitmap ?: return@showSignatureDialog)
+                    if (signatureBitmap == null) {
+                        return@showSignatureDialog
+                    }
+                    if (signAllPages) {
+                        for (i in 0 until totalPages) {
+                            val (pdfX, pdfY) = getPdfCoordinates(cursorX, cursorY)
+                            pageSignatures[i] = signatureBitmap to Pair(pdfX, pdfY)
+                        }
+                    } else {
+                        insertSignatureAtCursor(signatureBitmap)
+                    }
+
                     val originalFilePath = requireArguments().getString(ARG_FILE_PATH)!!
                     val originalFileName = File(originalFilePath).nameWithoutExtension
                     val defaultFileName = "${originalFileName}_signed.pdf"
                     createFileLauncher.launch(defaultFileName)
 
-
                 }
-
             }
         }
+
         binding.ivPdf.setOnPhotoTapListener { view, x, y ->
             cursorX = x * view.width
             cursorY = y * view.height
