@@ -17,6 +17,7 @@
     <!-- Hints -->
     <string name="title_sign">Toca con el dedo dónde quieres firmar</string>
     <string name="view_pdf">Visualizar PDF</string>
+    <string name="sign_size">Tamaño de la firma</string>
 
     <!-- File -->
     <string name="select_file">Seleccionar archivo...</string>

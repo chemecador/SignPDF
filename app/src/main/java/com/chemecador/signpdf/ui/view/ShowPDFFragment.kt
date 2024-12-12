@@ -52,6 +52,7 @@ class ShowPDFFragment : Fragment() {
     private val pageSignatures = mutableMapOf<Int, Pair<Bitmap, Pair<Float, Float>>>()
     private var cursorX: Float = 0f
     private var cursorY: Float = 0f
+    private var signSize: Float = 17f
     private val createFileLauncher =
         registerForActivityResult(ActivityResultContracts.CreateDocument("application/pdf")) { uri: Uri? ->
             uri?.let { savePdfToUri(it) }
@@ -185,7 +186,6 @@ class ShowPDFFragment : Fragment() {
         }
     }
 
-
     private fun showSignatureDialog(onSignatureComplete: (Bitmap?) -> Unit) {
         val dialogView =
             LayoutInflater.from(requireContext())
@@ -207,6 +207,10 @@ class ShowPDFFragment : Fragment() {
             }
         })
 
+        binding.sliderSize.addOnChangeListener { _, value, _ ->
+            signSize = value
+        }
+
         binding.ibDelete.setOnClickListener {
             binding.drawingView.clearDrawing()
         }
@@ -217,6 +221,9 @@ class ShowPDFFragment : Fragment() {
         }
 
         binding.btnFinish.setOnClickListener {
+            if (binding.drawingView.isEmpty()) {
+                return@setOnClickListener
+            }
             val signatureBitmap = binding.drawingView.getBitmap()
             dialog.dismiss()
             onSignatureComplete(signatureBitmap)
@@ -293,7 +300,7 @@ class ShowPDFFragment : Fragment() {
                         val (pdfX, pdfY) = position
 
                         val signatureWidth =
-                            page.width * 0.18f
+                            page.width * signSize / 100
                         val signatureHeight = signature.height * (signatureWidth / signature.width)
 
                         val scaledSignature = Bitmap.createScaledBitmap(

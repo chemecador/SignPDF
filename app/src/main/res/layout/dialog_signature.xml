@@ -44,6 +44,27 @@
             tools:visibility="visible" />
     </androidx.cardview.widget.CardView>
 
+    <TextView
+        android:id="@+id/tv_size_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/margin_small"
+        android:text="@string/sign_size"
+        app:layout_constraintTop_toBottomOf="@id/fl" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/slider_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:value="18"
+        android:valueFrom="14"
+        android:valueTo="40"
+        android:stepSize="2"
+        app:layout_constraintTop_toBottomOf="@id/tv_size_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_cancel"
         android:layout_width="0dp"
@@ -55,7 +76,7 @@
         app:icon="@drawable/ic_delete"
         app:layout_constraintEnd_toStartOf="@id/btn_finish"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fl" />
+        app:layout_constraintTop_toBottomOf="@id/slider_size" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_finish"

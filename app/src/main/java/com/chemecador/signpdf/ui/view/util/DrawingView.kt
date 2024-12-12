@@ -85,5 +85,6 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         return bitmap
     }
 
+    fun isEmpty() = !hasDrawn
 }
 
