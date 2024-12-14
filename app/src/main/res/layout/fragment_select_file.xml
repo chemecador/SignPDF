@@ -1,18 +1,17 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:padding="@dimen/margin_medium">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_selectFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/select_file"
-        android:padding="12dp"
         android:backgroundTint="?attr/colorPrimary"
-        android:textColor="@android:color/white"
-        android:elevation="4dp" />
+        android:elevation="@dimen/cardview_default_elevation"
+        android:padding="@dimen/margin_medium"
+        android:text="@string/select_file"
+        android:textColor="@android:color/white" />
 </LinearLayout>

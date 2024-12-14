@@ -43,6 +43,12 @@
     <string name="file_saved">Archivo guardado en: %1$s</string>
     <string name="error_saving_file">Error al guardar el archivo</string>
 
+    <!-- Show -->
+    <string name="sign_another">Firmar otro</string>
+    <string name="sign_again">Firmar de nuevo</string>
+    <string name="share">Compartir</string>
+    <string name="share_via">Enviar PDF con...</string>
+
     <!-- Colors -->
     <string name="black">Negro</string>
     <string name="red">Rojo</string>

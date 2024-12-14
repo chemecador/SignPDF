@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -340,6 +341,11 @@ class SignFragment : Fragment() {
                     getString(R.string.file_saved, uri.toString()),
                     Toast.LENGTH_SHORT
                 ).show()
+
+                findNavController().navigate(
+                    R.id.action_signFragment_to_showFragment,
+                    bundleOf(ARG_URI_PATH to uri.toString())
+                )
             }
         } catch (e: Exception) {
             Toast.makeText(
@@ -358,5 +364,6 @@ class SignFragment : Fragment() {
 
     companion object {
         const val ARG_FILE_PATH = "file_path"
+        const val ARG_URI_PATH = "pdfUri"
     }
 }

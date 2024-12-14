@@ -15,10 +15,33 @@
             app:destination="@id/signFragment" />
 
     </fragment>
+
     <fragment
         android:id="@+id/signFragment"
         android:name="com.chemecador.signpdf.ui.view.SignFragment"
-        tools:layout="@layout/fragment_sign">
+        tools:layout="@layout/fragment_sign" />
+
+    <fragment
+        android:id="@+id/showFragment"
+        android:name="com.chemecador.signpdf.ui.view.ShowFragment"
+        tools:layout="@layout/fragment_show">
+        <argument
+            android:name="pdfUri"
+            app:argType="string" />
     </fragment>
+
+    <action
+        android:id="@+id/action_signFragment_to_showFragment"
+        app:destination="@id/showFragment" />
+
+    <action
+        android:id="@+id/action_showFragment_to_signFragment"
+        app:destination="@id/signFragment" />
+
+
+    <action
+        android:id="@+id/action_showFragment_to_selectFileFragment"
+        app:destination="@id/selectFileFragment" />
+
 
 </navigation>
