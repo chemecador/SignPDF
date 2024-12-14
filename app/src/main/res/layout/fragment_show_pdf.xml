@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/linear_page"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
@@ -44,6 +44,16 @@
             app:tint="@color/black" />
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/ib_home"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@null"
+        android:contentDescription="@string/action_back"
+        android:src="@drawable/ic_home"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cv"
         android:layout_width="0dp"
@@ -52,7 +62,7 @@
         android:layout_margin="@dimen/margin_small"
         app:cardCornerRadius="@dimen/cardview_default_radius"
         app:cardElevation="@dimen/cardview_default_elevation"
-        app:layout_constraintBottom_toTopOf="@id/btn_cancel"
+        app:layout_constraintBottom_toTopOf="@id/btn_sign"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linear_page">
@@ -61,8 +71,8 @@
             android:id="@+id/iv_pdf"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:contentDescription="@string/view_pdf" />
+            android:contentDescription="@string/view_pdf"
+            android:scaleType="fitXY" />
 
         <ImageView
             android:id="@+id/iv_pencil"
@@ -73,7 +83,6 @@
             android:visibility="invisible" />
 
     </androidx.cardview.widget.CardView>
-
 
     <TextView
         android:id="@+id/tv_hint"
@@ -87,30 +96,19 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_cancel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_xsmall"
-        android:drawableStart="@drawable/ic_delete"
-        android:text="@string/action_delete"
-        android:visibility="invisible"
-        app:icon="@drawable/ic_delete"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_finish"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_finish"
-        android:layout_width="0dp"
+        android:id="@+id/btn_sign"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_xsmall"
         android:drawableStart="@drawable/ic_delete"
         android:text="@string/action_sign"
         android:visibility="invisible"
+        android:gravity="center"
         app:icon="@drawable/ic_edit"
+        tools:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_cancel" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

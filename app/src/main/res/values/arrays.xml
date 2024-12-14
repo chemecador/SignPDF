@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="signature_color_options">
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Red</item>
+        <item>Green</item>
+    </string-array>
+
+    <string-array name="signature_color_values">
+        <item>BLACK</item>
+        <item>BLUE</item>
+        <item>RED</item>
+        <item>GREEN</item>
+    </string-array>
+</resources>

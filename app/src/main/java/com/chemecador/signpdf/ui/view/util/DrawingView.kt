@@ -71,6 +71,11 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         drawListener = listener
     }
 
+    fun setSignatureColor(color: Int) {
+        paint.color = color
+        invalidate()
+    }
+
     fun clearDrawing() {
         drawListener?.onDrawStateChanged(false)
         hasDrawn = false

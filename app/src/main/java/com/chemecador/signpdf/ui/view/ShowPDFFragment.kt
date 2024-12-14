@@ -2,6 +2,7 @@ package com.chemecador.signpdf.ui.view
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfRenderer
@@ -9,9 +10,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
@@ -19,21 +17,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.chemecador.signpdf.R
 import com.chemecador.signpdf.databinding.DialogSignatureBinding
 import com.chemecador.signpdf.databinding.FragmentShowPdfBinding
 import com.chemecador.signpdf.ui.view.util.DrawingView
-import com.chemecador.signpdf.ui.viewmodel.ViewModel
 import com.chemecador.signpdf.utils.ViewUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
@@ -44,7 +38,6 @@ class ShowPDFFragment : Fragment() {
 
     private var _binding: FragmentShowPdfBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: ViewModel by viewModels()
 
     private lateinit var pdfRenderer: PdfRenderer
     private var currentPageIndex: Int = 0
@@ -86,28 +79,6 @@ class ShowPDFFragment : Fragment() {
 
     private fun setupMenu() {
         val activity = requireActivity() as AppCompatActivity
-        activity.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.menu_main, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        findNavController().navigateUp()
-                        true
-                    }
-
-                    R.id.action_settings -> {
-                        findNavController().navigate(R.id.action_showPDFFragment_to_settingsFragment)
-                        true
-                    }
-
-                    else -> false
-                }
-            }
-        }, viewLifecycleOwner)
-
         activity.supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
         }
@@ -118,11 +89,11 @@ class ShowPDFFragment : Fragment() {
         binding.btnPrevPage.visibility = INVISIBLE
         binding.btnPrevPage.setOnClickListener { navigateToPage(false) }
         binding.btnNextPage.setOnClickListener { navigateToPage(true) }
-        binding.btnFinish.setOnClickListener {
+        binding.ibHome.setOnClickListener { findNavController().popBackStack() }
+        binding.btnSign.setOnClickListener {
             lifecycleScope.launch {
-                val signAllPages = viewModel.isSignAllPagesEnabled.first()
 
-                showSignatureDialog { signatureBitmap ->
+                showSignatureDialog { signatureBitmap, signAllPages ->
                     if (signatureBitmap == null) {
                         return@showSignatureDialog
                     }
@@ -181,12 +152,11 @@ class ShowPDFFragment : Fragment() {
 
         if (binding.tvHint.isVisible) {
             ViewUtils.hide(binding.tvHint)
-            ViewUtils.show(binding.btnCancel)
-            ViewUtils.show(binding.btnFinish)
+            ViewUtils.show(binding.btnSign)
         }
     }
 
-    private fun showSignatureDialog(onSignatureComplete: (Bitmap?) -> Unit) {
+    private fun showSignatureDialog(onSignatureComplete: (Bitmap?, Boolean) -> Unit) {
         val dialogView =
             LayoutInflater.from(requireContext())
                 .inflate(R.layout.dialog_signature, binding.root, false)
@@ -196,13 +166,27 @@ class ShowPDFFragment : Fragment() {
             .setView(binding.root)
             .setCancelable(false)
             .create()
+        binding.colorSelector.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            val selectedColor = when (checkedId) {
+                R.id.btn_black -> Color.BLACK
+                R.id.btn_red -> Color.RED
+                R.id.btn_blue -> Color.BLUE
+                else -> Color.BLACK
+            }
+            binding.drawingView.setSignatureColor(selectedColor)
 
+        }
         binding.drawingView.setOnDrawListener(object : DrawingView.OnDrawListener {
             override fun onDrawStateChanged(hasDrawn: Boolean) {
                 if (hasDrawn && !binding.ibDelete.isVisible) {
                     ViewUtils.show(binding.ibDelete)
                 } else if (!hasDrawn && binding.ibDelete.isVisible) {
                     ViewUtils.hide(binding.ibDelete)
+                }
+                if (binding.tvHint.isVisible){
+                    ViewUtils.hide(binding.tvHint)
+                    ViewUtils.show(binding.btnCancel)
+                    ViewUtils.show(binding.btnFinish)
                 }
             }
         })
@@ -215,9 +199,12 @@ class ShowPDFFragment : Fragment() {
             binding.drawingView.clearDrawing()
         }
 
+        binding.ibClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
         binding.btnCancel.setOnClickListener {
             dialog.dismiss()
-            onSignatureComplete(null)
         }
 
         binding.btnFinish.setOnClickListener {
@@ -225,8 +212,9 @@ class ShowPDFFragment : Fragment() {
                 return@setOnClickListener
             }
             val signatureBitmap = binding.drawingView.getBitmap()
+            val signAllPages = binding.rbAllPages.isChecked
             dialog.dismiss()
-            onSignatureComplete(signatureBitmap)
+            onSignatureComplete(signatureBitmap, signAllPages)
         }
 
         dialog.show()
