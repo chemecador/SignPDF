@@ -57,7 +57,7 @@ class SelectFileFragment : Fragment() {
 
     private fun navigateToShowPDFFragment(filePath: String) {
         val bundle = Bundle().apply {
-            putString(ShowPDFFragment.ARG_FILE_PATH, filePath)
+            putString(SignFragment.ARG_FILE_PATH, filePath)
         }
 
         findNavController().navigate(R.id.action_selectFileFragment_to_showPDFFragment, bundle)

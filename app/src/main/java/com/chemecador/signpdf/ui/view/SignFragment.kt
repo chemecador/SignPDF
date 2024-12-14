@@ -23,7 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.chemecador.signpdf.R
 import com.chemecador.signpdf.databinding.DialogSignatureBinding
-import com.chemecador.signpdf.databinding.FragmentShowPdfBinding
+import com.chemecador.signpdf.databinding.FragmentSignBinding
 import com.chemecador.signpdf.ui.view.util.DrawingView
 import com.chemecador.signpdf.utils.ViewUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -34,9 +34,9 @@ import java.io.File
 import java.io.IOException
 
 @AndroidEntryPoint
-class ShowPDFFragment : Fragment() {
+class SignFragment : Fragment() {
 
-    private var _binding: FragmentShowPdfBinding? = null
+    private var _binding: FragmentSignBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var pdfRenderer: PdfRenderer
@@ -56,7 +56,7 @@ class ShowPDFFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentShowPdfBinding.inflate(inflater, container, false)
+        _binding = FragmentSignBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -178,7 +178,7 @@ class ShowPDFFragment : Fragment() {
             )
         }
 
-        binding.colorSelector.addOnButtonCheckedListener { _, checkedId, isChecked ->
+        binding.colorSelector.addOnButtonCheckedListener { _, checkedId, _ ->
             val selectedColor = when (checkedId) {
                 R.id.btn_black -> Color.BLACK
                 R.id.btn_red -> Color.RED
