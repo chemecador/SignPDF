@@ -166,6 +166,18 @@ class ShowPDFFragment : Fragment() {
             .setView(binding.root)
             .setCancelable(false)
             .create()
+
+        binding.tvOptions.setOnClickListener {
+            val isCustomizationVisible = binding.linearOptions.isVisible
+            binding.linearOptions.isVisible = !isCustomizationVisible
+            binding.tvOptions.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                if (isCustomizationVisible) R.drawable.ic_arrow_down else R.drawable.ic_arrow_up,
+                0
+            )
+        }
+
         binding.colorSelector.addOnButtonCheckedListener { _, checkedId, isChecked ->
             val selectedColor = when (checkedId) {
                 R.id.btn_black -> Color.BLACK
@@ -183,7 +195,7 @@ class ShowPDFFragment : Fragment() {
                 } else if (!hasDrawn && binding.ibDelete.isVisible) {
                     ViewUtils.hide(binding.ibDelete)
                 }
-                if (binding.tvHint.isVisible){
+                if (binding.tvHint.isVisible) {
                     ViewUtils.hide(binding.tvHint)
                     ViewUtils.show(binding.btnCancel)
                     ViewUtils.show(binding.btnFinish)

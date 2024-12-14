@@ -5,107 +5,118 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/margin_small">
 
+    <TextView
+        android:id="@+id/tv_options"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="@string/options"
+        app:drawableEndCompat="@drawable/ic_arrow_down"
+        app:layout_constraintBottom_toBottomOf="@id/ib_close"
+        app:layout_constraintEnd_toStartOf="@id/ib_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
         android:id="@+id/ib_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
         android:contentDescription="@string/action_close"
-        android:paddingStart="@dimen/margin_small"
-        android:paddingBottom="@dimen/margin_small"
+        android:padding="@dimen/margin_small"
         android:src="@drawable/ic_close"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlSymmetry" />
 
-    <RadioGroup
-        android:id="@+id/radioGroupPages"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <RadioButton
-            android:id="@+id/rbCurrentPage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/sign_current_page" />
-
-        <RadioButton
-            android:id="@+id/rbAllPages"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sign_all_pages" />
-    </RadioGroup>
-
-    <TextView
-        android:id="@+id/tv_size"
+    <LinearLayout
+        android:id="@+id/linear_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="@dimen/margin_small"
-        android:text="@string/sign_size"
-        app:layout_constraintTop_toBottomOf="@id/radioGroupPages" />
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tv_options"
+        tools:visibility="visible">
 
-    <com.google.android.material.slider.Slider
-        android:id="@+id/slider_size"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:stepSize="2"
-        android:value="18"
-        android:valueFrom="14"
-        android:valueTo="40"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_size" />
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_color"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="@dimen/margin_small"
-        android:text="@string/sign_color"
-        app:layout_constraintTop_toBottomOf="@id/slider_size" />
+            <RadioButton
+                android:id="@+id/rb_currentPage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/sign_current_page" />
 
+            <RadioButton
+                android:id="@+id/rb_allPages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_all_pages" />
+        </RadioGroup>
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/colorSelector"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
-        app:layout_constraintTop_toBottomOf="@id/tv_color">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_black"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tv_size"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@android:color/black"
-            android:text="@string/black"
-            android:textColor="@android:color/white" />
+            android:padding="@dimen/margin_small"
+            android:text="@string/sign_size" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_red"
-            android:layout_width="0dp"
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_size"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@android:color/holo_red_dark"
-            android:text="@string/red"
-            android:textColor="@android:color/white" />
+            android:stepSize="2"
+            android:value="18"
+            android:valueFrom="14"
+            android:valueTo="40"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_size" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_blue"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tv_color"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@android:color/holo_blue_dark"
-            android:text="@string/blue"
-            android:textColor="@android:color/white" />
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+            android:padding="@dimen/margin_small"
+            android:text="@string/sign_color" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/colorSelector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_black"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/black"
+                android:text="@string/black"
+                android:textColor="@android:color/white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_red"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:text="@string/red"
+                android:textColor="@android:color/white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_blue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:text="@string/blue"
+                android:textColor="@android:color/white" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    </LinearLayout>
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/fl"
@@ -116,7 +127,7 @@
         android:padding="@dimen/margin_small"
         app:cardCornerRadius="@dimen/cardview_default_radius"
         app:cardElevation="@dimen/cardview_default_elevation"
-        app:layout_constraintTop_toBottomOf="@id/colorSelector">
+        app:layout_constraintTop_toBottomOf="@id/linear_options">
 
         <com.chemecador.signpdf.ui.view.util.DrawingView
             android:id="@+id/drawingView"

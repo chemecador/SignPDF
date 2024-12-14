@@ -21,6 +21,7 @@
     <string name="view_pdf">Visualizar PDF</string>
     <string name="sign_size">Tamaño de la firma</string>
     <string name="sign_color">Color de la firma</string>
+    <string name="options">Opciones</string>
 
     <!-- File -->
     <string name="select_file">Seleccionar archivo...</string>
