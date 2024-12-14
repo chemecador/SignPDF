@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -28,6 +31,18 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+    signingConfigs {
+        create("release") {
+            val signingPropertiesFile = file("signing.properties")
+            val signingProperties = Properties()
+            signingProperties.load(FileInputStream(signingPropertiesFile))
+
+            storeFile = signingProperties["storeFile"]?.let { file(it) }
+            storePassword = signingProperties["storePassword"].toString()
+            keyAlias = signingProperties["keyAlias"].toString()
+            keyPassword = signingProperties["keyPassword"].toString()
         }
     }
     compileOptions {
