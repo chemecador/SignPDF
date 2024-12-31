@@ -1,5 +1,6 @@
 package com.chemecador.signpdf.ui.view
 
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -33,6 +34,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
+import java.util.Locale
 
 @AndroidEntryPoint
 class SignFragment : Fragment() {
@@ -180,15 +182,25 @@ class SignFragment : Fragment() {
         }
 
         binding.colorSelector.addOnButtonCheckedListener { _, checkedId, _ ->
-            val selectedColor = when (checkedId) {
-                R.id.btn_black -> Color.BLACK
-                R.id.btn_red -> Color.RED
-                R.id.btn_blue -> Color.BLUE
-                else -> Color.BLACK
-            }
-            binding.drawingView.setSignatureColor(selectedColor)
+            val buttons = listOf(
+                binding.btnBlack to Color.BLACK,
+                binding.btnRed to Color.RED,
+                binding.btnBlue to Color.BLUE
+            )
 
+            buttons.forEach { (button, color) ->
+                if (button.id == checkedId) {
+                    button.backgroundTintList = ColorStateList.valueOf(color)
+                    binding.tvColor.text = button.text
+                } else {
+                    button.backgroundTintList = ColorStateList.valueOf(Color.GRAY)
+                }
+            }
+
+            val selectedColor = buttons.first { it.first.id == checkedId }.second
+            binding.drawingView.setSignatureColor(selectedColor)
         }
+
         binding.drawingView.setOnDrawListener(object : DrawingView.OnDrawListener {
             override fun onDrawStateChanged(hasDrawn: Boolean) {
                 if (hasDrawn && !binding.ibDelete.isVisible) {
@@ -206,6 +218,7 @@ class SignFragment : Fragment() {
 
         binding.sliderSize.addOnChangeListener { _, value, _ ->
             signSize = value
+            binding.tvSize.text = String.format(Locale.getDefault(), "%.0f", value)
         }
 
         binding.ibDelete.setOnClickListener {

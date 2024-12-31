@@ -56,12 +56,28 @@
                 android:text="@string/sign_all_pages" />
         </RadioGroup>
 
-        <TextView
-            android:id="@+id/tv_size"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/margin_small"
-            android:text="@string/sign_size" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_label_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_small"
+                android:text="@string/sign_size" />
+
+            <TextView
+                android:id="@+id/tv_size"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/margin_small"
+                android:text="18"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
 
         <com.google.android.material.slider.Slider
             android:id="@+id/slider_size"
@@ -75,12 +91,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_size" />
 
-        <TextView
-            android:id="@+id/tv_color"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/margin_small"
-            android:text="@string/sign_color" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_label_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_small"
+                android:text="@string/sign_color" />
+
+            <TextView
+                android:id="@+id/tv_color"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/margin_small"
+                android:text="@string/black"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/colorSelector"
@@ -101,7 +132,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/holo_red_dark"
+                android:backgroundTint="@android:color/darker_gray"
                 android:text="@string/red"
                 android:textColor="@android:color/white" />
 
@@ -110,7 +141,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/holo_blue_dark"
+                android:backgroundTint="@android:color/darker_gray"
                 android:text="@string/blue"
                 android:textColor="@android:color/white" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
