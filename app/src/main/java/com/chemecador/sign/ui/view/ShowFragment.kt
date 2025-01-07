@@ -1,4 +1,4 @@
-package com.chemecador.signpdf.ui.view
+package com.chemecador.sign.ui.view
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -13,9 +13,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.chemecador.signpdf.R
-import com.chemecador.signpdf.databinding.FragmentShowBinding
-import com.chemecador.signpdf.ui.view.SignFragment.Companion.ARG_URI_PATH
+import com.chemecador.sign.R
+import com.chemecador.sign.databinding.FragmentShowBinding
+import com.chemecador.sign.ui.view.SignFragment.Companion.ARG_URI_PATH
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 

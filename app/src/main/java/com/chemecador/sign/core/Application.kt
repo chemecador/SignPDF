@@ -1,7 +1,7 @@
-package com.chemecador.signpdf.core
+package com.chemecador.sign.core
 
 import android.app.Application
-import com.chemecador.signpdf.utils.log.FileLoggingTree
+import com.chemecador.sign.utils.log.FileLoggingTree
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 

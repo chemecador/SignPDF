@@ -1,4 +1,4 @@
-package com.chemecador.signpdf
+package com.chemecador.sign
 
 import org.junit.Test
 

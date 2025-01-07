@@ -1,8 +1,8 @@
-package com.chemecador.signpdf.utils.log
+package com.chemecador.sign.utils.log
 
 import android.content.Context
 import android.util.Log
-import com.chemecador.signpdf.utils.DateUtils
+import com.chemecador.sign.utils.DateUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import timber.log.Timber
 import java.io.File

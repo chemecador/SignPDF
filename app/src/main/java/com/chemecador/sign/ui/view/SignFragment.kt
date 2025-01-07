@@ -1,4 +1,4 @@
-package com.chemecador.signpdf.ui.view
+package com.chemecador.sign.ui.view
 
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
@@ -23,11 +23,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.chemecador.signpdf.R
-import com.chemecador.signpdf.databinding.DialogSignatureBinding
-import com.chemecador.signpdf.databinding.FragmentSignBinding
-import com.chemecador.signpdf.ui.view.util.DrawingView
-import com.chemecador.signpdf.utils.ViewUtils
+import com.chemecador.sign.R
+import com.chemecador.sign.databinding.DialogSignatureBinding
+import com.chemecador.sign.databinding.FragmentSignBinding
+import com.chemecador.sign.ui.view.util.DrawingView
+import com.chemecador.sign.utils.ViewUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -201,6 +201,11 @@ class SignFragment : Fragment() {
             binding.drawingView.setSignatureColor(selectedColor)
         }
 
+        binding.sliderSize.addOnChangeListener { _, value, _ ->
+            signSize = value
+            binding.tvSize.text = String.format(Locale.getDefault(), "%.0f", value)
+        }
+
         binding.drawingView.setOnDrawListener(object : DrawingView.OnDrawListener {
             override fun onDrawStateChanged(hasDrawn: Boolean) {
                 if (hasDrawn && !binding.ibDelete.isVisible) {
@@ -215,11 +220,6 @@ class SignFragment : Fragment() {
                 }
             }
         })
-
-        binding.sliderSize.addOnChangeListener { _, value, _ ->
-            signSize = value
-            binding.tvSize.text = String.format(Locale.getDefault(), "%.0f", value)
-        }
 
         binding.ibDelete.setOnClickListener {
             binding.drawingView.clearDrawing()

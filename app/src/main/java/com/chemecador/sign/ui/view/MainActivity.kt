@@ -1,4 +1,4 @@
-package com.chemecador.signpdf.ui.view
+package com.chemecador.sign.ui.view
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
-import com.chemecador.signpdf.R
-import com.chemecador.signpdf.databinding.ActivityMainBinding
+import com.chemecador.sign.R
+import com.chemecador.sign.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

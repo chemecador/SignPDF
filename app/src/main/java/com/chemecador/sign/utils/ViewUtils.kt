@@ -1,4 +1,4 @@
-package com.chemecador.signpdf.utils
+package com.chemecador.sign.utils
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

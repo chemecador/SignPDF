@@ -1,4 +1,4 @@
-package com.chemecador.signpdf.ui.view.util
+package com.chemecador.sign.ui.view.util
 
 import android.content.Context
 import android.graphics.Bitmap

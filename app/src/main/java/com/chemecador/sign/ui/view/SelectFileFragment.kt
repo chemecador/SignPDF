@@ -1,4 +1,4 @@
-package com.chemecador.signpdf.ui.view
+package com.chemecador.sign.ui.view
 
 import android.net.Uri
 import android.os.Bundle
@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.chemecador.signpdf.R
-import com.chemecador.signpdf.databinding.FragmentSelectFileBinding
+import com.chemecador.sign.R
+import com.chemecador.sign.databinding.FragmentSelectFileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 

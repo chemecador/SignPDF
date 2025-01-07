@@ -1,4 +1,4 @@
-package com.chemecador.signpdf.utils
+package com.chemecador.sign.utils
 
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat

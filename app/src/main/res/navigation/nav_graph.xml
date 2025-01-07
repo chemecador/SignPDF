@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/selectFileFragment"
-        android:name="com.chemecador.signpdf.ui.view.SelectFileFragment"
+        android:name="com.chemecador.sign.ui.view.SelectFileFragment"
         android:label="Select File"
         tools:layout="@layout/fragment_select_file">
         <action
@@ -18,12 +18,12 @@
 
     <fragment
         android:id="@+id/signFragment"
-        android:name="com.chemecador.signpdf.ui.view.SignFragment"
+        android:name="com.chemecador.sign.ui.view.SignFragment"
         tools:layout="@layout/fragment_sign" />
 
     <fragment
         android:id="@+id/showFragment"
-        android:name="com.chemecador.signpdf.ui.view.ShowFragment"
+        android:name="com.chemecador.sign.ui.view.ShowFragment"
         tools:layout="@layout/fragment_show">
         <argument
             android:name="pdfUri"

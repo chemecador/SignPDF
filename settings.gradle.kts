@@ -20,5 +20,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SignPDF"
+rootProject.name = "Sign"
 include(":app")

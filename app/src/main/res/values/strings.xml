@@ -17,6 +17,7 @@
     <string name="pencil_mode">Firma con lápiz</string>
 
     <!-- Hints -->
+    <string name="label_hint">Toca con el dedo donde quieres firmar</string>
     <string name="title_sign">Firma con el dedo en el cuadro blanco</string>
     <string name="view_pdf">Visualizar PDF</string>
     <string name="sign_size">Tamaño de la firma:</string>
@@ -24,7 +25,7 @@
     <string name="options">Opciones</string>
 
     <!-- File -->
-    <string name="select_file">Seleccionar archivo...</string>
+    <string name="select_file">Seleccionar archivo…</string>
     <string name="file_selected">Archivo seleccionado</string>
     <string name="file_not_found">Archivo no encontrado</string>
     <string name="error_file">Archivo no encontrado</string>
@@ -47,7 +48,7 @@
     <string name="sign_another">Firmar otro</string>
     <string name="sign_again">Firmar de nuevo</string>
     <string name="share">Compartir</string>
-    <string name="share_via">Enviar PDF con...</string>
+    <string name="share_via">Enviar PDF con…</string>
 
     <!-- Colors -->
     <string name="black">Negro</string>

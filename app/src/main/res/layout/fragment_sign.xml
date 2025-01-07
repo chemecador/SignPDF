@@ -91,7 +91,7 @@
         android:layout_gravity="bottom"
         android:gravity="center"
         android:padding="@dimen/margin_medium"
-        android:text="@string/title_sign"
+        android:text="@string/label_hint"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent" />
 
